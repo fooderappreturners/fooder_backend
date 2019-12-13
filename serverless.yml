@@ -13,6 +13,6 @@ functions:
       DB_PASSWORD: ${opt:DB_PASSWORD}
     events: 
       - http:
-          path: fooder
+          path: fooder/{dietaryOptionId}
           method: get
           cors: true

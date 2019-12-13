@@ -16,10 +16,20 @@ const connection = mysql.createConnection({
   database: "fooder"
 });
 
-app.get("/fooder", function(req, res) {
-  connection.query("SELECT * FROM restaurants", function(err, data) {
+
+//Return the restaurants whith a specific dietaryOption
+app.get("/fooder/:dietaryOptionId", function(req, res) {
+
+  const dietaryOptionId = req.params.dietaryOptionId;
+
+  const sql = `SELECT r.name, r.capacity FROM restaurants r 
+                INNER JOIN restaurantsDietaryOptions rdo 
+                ON r.id=rdo.restaunrant_id 
+                WHERE rdo.dietaryOption_id = ?`;
+
+  connection.query(sql, [dietaryOptionId], (err, data) => {
     if (err) {
-      console.log("Error fetching tasks", err);
+      console.log("Error fetching restaurants", err);
       res.status(500).json({
         error: err
       });
