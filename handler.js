@@ -40,4 +40,23 @@ app.get("/restaurants/:dietaryOptionId", function(req, res) {
   });
 });
 
+//Return all bookings
+app.get("/bookings", function(req, res) {  
+
+  const sql = `SELECT * FROM bookings`;
+
+  connection.query(sql, (err, data) => {
+    if (err) {
+      console.log("Error fetching bookings", err);
+      res.status(500).json({
+        error: err
+      });
+    } else {
+      res.json({
+        bookings: data
+      });
+    }
+  });
+});
+
 module.exports.fooder = serverless(app);
