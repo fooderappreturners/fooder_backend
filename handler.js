@@ -80,4 +80,34 @@ app.get("/bookings/:restaurantId", function(req, res) {
   });
 });
 
+//Add a booking
+app.post("/addBooking", function(req, res) {
+
+  const id = null;
+  const date = req.body.date;
+  const number = req.body.number;
+  const name = req.body.name;
+  const restaurantId = req.body.restaurantId;
+
+
+  const sql = `INSERT INTO bookings VALUES (?, ?, ?, ?, ?)`;
+
+  connection.query(sql, [id, date, number, name, restaurantId], (err) => {
+    if (err) {
+      console.log("Error adding a booking", err);
+      res.status(500).json({
+        error: err
+      });
+    } else {
+      res.status(201).json({   
+        id: res.insertId,         
+        date,
+        number,
+        name,
+        restaurantId    
+      });
+    }
+  });
+});
+
 module.exports.fooder = serverless(app);

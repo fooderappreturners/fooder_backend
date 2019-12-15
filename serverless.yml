@@ -24,3 +24,7 @@ functions:
           path: bookings/{restaurantId}
           method: get
           cors: true
+      - http:
+          path: addBooking
+          method: post
+          cors: true
