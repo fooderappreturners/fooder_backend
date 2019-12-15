@@ -16,9 +16,8 @@ const connection = mysql.createConnection({
   database: "fooder"
 });
 
-
 //Return the restaurants whith a specific dietaryOption
-app.get("/fooder/:dietaryOptionId", function(req, res) {
+app.get("/restaurants/:dietaryOptionId", function(req, res) {
 
   const dietaryOptionId = req.params.dietaryOptionId;
 
