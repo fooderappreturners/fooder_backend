@@ -59,4 +59,25 @@ app.get("/bookings", function(req, res) {
   });
 });
 
+//Return the bookings filtered by restaurant id
+app.get("/bookings/:restaurantId", function(req, res) {
+
+  const restaurantId = req.params.restaurantId;
+
+  const sql = `SELECT * FROM bookings WHERE restaunrant_id= ?`;
+
+  connection.query(sql, [restaurantId], (err, data) => {
+    if (err) {
+      console.log("Error fetching restaurants", err);
+      res.status(500).json({
+        error: err
+      });
+    } else {
+      res.json({
+        restaurants: data
+      });
+    }
+  });
+});
+
 module.exports.fooder = serverless(app);
