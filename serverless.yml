@@ -32,3 +32,7 @@ functions:
           path: deleteBooking/{bookingId}
           method: delete
           cors: true
+      - http:
+          path: bookingsRestaurantsDate/{restaurantId}/{date}
+          method: get
+          cors: true

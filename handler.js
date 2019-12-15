@@ -124,9 +124,30 @@ app.delete("/deleteBooking/:bookingId", function (request, response) {
       });
     } else {
       response.status(200).json('Removal done');
-    }    
-    
+    }  
   });
-   
 });
+
+//Return the bookings filtered by restaurant id and date
+app.get("/bookingsRestaurantsDate/:restaurantId/:date", function(req, res) {
+
+  const restaurantId = req.params.restaurantId;
+  const date = req.params.date;
+
+  const sql = `SELECT * FROM bookings WHERE restaunrant_id = ? AND date = ?`;
+
+  connection.query(sql, [restaurantId, date], (err, data) => {
+    if (err) {
+      console.log("Error fetching bookings", err);
+      res.status(500).json({
+        error: err
+      });
+    } else {
+      res.json({
+        bookings: data
+      });
+    }
+  });
+});
+
 module.exports.fooder = serverless(app);
