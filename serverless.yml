@@ -28,3 +28,7 @@ functions:
           path: addBooking
           method: post
           cors: true
+      - http:
+          path: deleteBooking/{bookingId}
+          method: delete
+          cors: true

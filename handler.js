@@ -89,7 +89,6 @@ app.post("/addBooking", function(req, res) {
   const name = req.body.name;
   const restaurantId = req.body.restaurantId;
 
-
   const sql = `INSERT INTO bookings VALUES (?, ?, ?, ?, ?)`;
 
   connection.query(sql, [id, date, number, name, restaurantId], (err) => {
@@ -110,4 +109,24 @@ app.post("/addBooking", function(req, res) {
   });
 });
 
+//Delete a booking
+app.delete("/deleteBooking/:bookingId", function (request, response) {
+  const id = request.params.bookingId;
+
+  const sql = 'DELETE FROM bookings WHERE id = ?';
+
+  connection.query(sql, [id], (err, results, fields) => {
+
+    if (err) {
+      console.log("Error deleting a booking", err);
+      response.status(500).json({
+        error: err
+      });
+    } else {
+      response.status(200).json('Removal done');
+    }    
+    
+  });
+   
+});
 module.exports.fooder = serverless(app);
