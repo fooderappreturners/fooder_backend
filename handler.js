@@ -21,7 +21,7 @@ app.get("/restaurants/:dietaryOptionId", function(req, res) {
 
   const dietaryOptionId = req.params.dietaryOptionId;
 
-  const sql = `SELECT r.name, r.capacity, r.location, r.description, r.phoneNumber, r.img FROM restaurants r 
+  const sql = `SELECT r.id, r.name, r.capacity, r.location, r.description, r.phoneNumber, r.img FROM restaurants r 
                 INNER JOIN restaurantsDietaryOptions rdo 
                 ON r.id=rdo.restaunrant_id 
                 WHERE rdo.dietaryOption_id = ?`;
