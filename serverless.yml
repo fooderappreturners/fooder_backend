@@ -17,6 +17,10 @@ functions:
           method: get
           cors: true
       - http:
+          path: multipleRestaurant/{dietaryOptionId1}/{dietaryOptionId2}/{dietaryOptionId3}/{dietaryOptionId4}/{dietaryOptionId5}
+          method: get
+          cors: true
+      - http:
           path: bookings
           method: get
           cors: true
