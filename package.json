@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Oversv/fooder-backend.git"
+    "url": "git+https://github.com/fooderappreturners/fooder_backend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Oversv/fooder-backend/issues"
+    "url": "https://github.com/fooderappreturners/fooder_backend/issues"
   },
-  "homepage": "https://github.com/Oversv/fooder-backend#readme",
+  "homepage": "https://github.com/fooderappreturners/fooder_backend#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
