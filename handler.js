@@ -31,7 +31,7 @@ app.get("/dietaryOptions", function (req, res) {
   });
 });
 
-//Return the restaurants whith a specific dietaryOption
+//Return the restaurants with a specific dietaryOption
 app.get("/restaurants/:dietaryOptionId", function (req, res) {
 
   const dietaryOptionId = req.params.dietaryOptionId.split(',');
