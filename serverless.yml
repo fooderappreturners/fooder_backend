@@ -12,7 +12,7 @@ functions:
       DB_USER: ${opt:DB_USER}
       DB_PASSWORD: ${opt:DB_PASSWORD}
     events:
-       - http:
+      - http:
           path: dietaryOptions
           method: get
           cors: true 
