@@ -31,6 +31,22 @@ app.get("/dietaryOptions", function (req, res) {
   });
 });
 
+app.get("/restaurants", function (req, res) {
+  const sql = `SELECT * FROM restaurants`;
+  connection.query(sql, (err, data) => {
+    if (err) {
+      console.log("Error fetching restaurants", err);
+      res.status(500).json({
+        error: err
+      });
+    } else {
+      res.json({
+        restaurants: data
+      });
+    }
+  });
+});
+
 //Return the restaurants with a specific dietaryOption
 app.get("/restaurants/:dietaryOptionId", function (req, res) {
 
@@ -46,22 +62,6 @@ app.get("/restaurants/:dietaryOptionId", function (req, res) {
                 WHERE rdo.dietaryOption_id IN (${placeholders.join(',')})`;
 
   connection.query(sql, dietaryOptionId, (err, data) => {
-    if (err) {
-      console.log("Error fetching restaurants", err);
-      res.status(500).json({
-        error: err
-      });
-    } else {
-      res.json({
-        restaurants: data
-      });
-    }
-  });
-});
-
-app.get("/restaurants", function (req, res) {
-  const sql = `SELECT * FROM restaurants`;
-  connection.query(sql, (err, data) => {
     if (err) {
       console.log("Error fetching restaurants", err);
       res.status(500).json({
