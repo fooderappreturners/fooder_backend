@@ -59,6 +59,22 @@ app.get("/restaurants/:dietaryOptionId", function (req, res) {
   });
 });
 
+app.get("/restaurants", function (req, res) {
+  const sql = `SELECT * FROM restaurants`;
+  connection.query(sql, (err, data) => {
+    if (err) {
+      console.log("Error fetching restaurants", err);
+      res.status(500).json({
+        error: err
+      });
+    } else {
+      res.json({
+        restaurants: data
+      });
+    }
+  });
+});
+
 // //Return the restaurants whith a multiply selection dietaryOptions
 // app.get("/multipleRestaurant/:dietaryOptionId1/:dietaryOptionId2/:dietaryOptionId3/:dietaryOptionId4/:dietaryOptionId5", function (req, res) {
 
