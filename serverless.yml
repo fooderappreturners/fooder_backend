@@ -11,7 +11,11 @@ functions:
       DB_HOST: ${opt:DB_HOST}
       DB_USER: ${opt:DB_USER}
       DB_PASSWORD: ${opt:DB_PASSWORD}
-    events: 
+    events:
+       - http:
+          path: dietaryOptions
+          method: get
+          cors: true 
       - http:
           path: restaurants/{dietaryOptionId}
           method: get
