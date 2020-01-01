@@ -4,11 +4,6 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
 
-const app = express();
-
-app.use(cors());
-app.use(bodyParser.json());
-
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -16,7 +11,11 @@ const connection = mysql.createConnection({
   database: "fooder"
 });
 
-app.get("dietaryOptions", function (req, res) {
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+app.get("/dietaryOptions", function (req, res) {
   const sql = `SELECT * FROM dietaryOptions`;
   connection.query(sql, (err, data) => {
     if (err) {
@@ -32,17 +31,22 @@ app.get("dietaryOptions", function (req, res) {
   });
 });
 
-//Return the restaurants whith a specific dietaryOption
+//Return the restaurants with a specific dietaryOption
 app.get("/restaurants/:dietaryOptionId", function (req, res) {
 
-  const dietaryOptionId = req.params.dietaryOptionId;
+  const dietaryOptionId = req.params.dietaryOptionId.split(',');
+  let placeholders = [];
+  dietaryOptionId.forEach(id => {
+    placeholders.push('?');
+  });
 
+  // returns restaurants with the selected dietary requirements 
   const sql = `SELECT r.id, r.name, r.capacity, r.location, r.description, r.phoneNumber, r.img FROM restaurants r 
                 INNER JOIN restaurantsDietaryOptions rdo 
-                ON r.id=rdo.restaunrant_id 
-                WHERE rdo.dietaryOption_id = ?`;
+                ON r.id=rdo.restaurant_id 
+                WHERE rdo.dietaryOption_id IN (${placeholders.join(',')})`;
 
-  connection.query(sql, [dietaryOptionId], (err, data) => {
+  connection.query(sql, dietaryOptionId, (err, data) => {
     if (err) {
       console.log("Error fetching restaurants", err);
       res.status(500).json({
@@ -56,45 +60,6 @@ app.get("/restaurants/:dietaryOptionId", function (req, res) {
   });
 });
 
-//Return the restaurants whith a multiply selection dietaryOptions
-app.get("/multipleRestaurant/:dietaryOptionId1/:dietaryOptionId2/:dietaryOptionId3/:dietaryOptionId4/:dietaryOptionId5", function (req, res) {
-
-  /***In Postman not working if it missing a parameter, check how to work in the front ***/
-  const dietaryOptionId1 = req.params.dietaryOptionId1;
-  const dietaryOptionId2 = req.params.dietaryOptionId2;
-  const dietaryOptionId3 = req.params.dietaryOptionId3;
-  const dietaryOptionId4 = req.params.dietaryOptionId4;
-  const dietaryOptionId5 = req.params.dietaryOptionId5;
-
-  if (typeof dietaryOptionId1 === 'undefined') dietaryOptionId1 = null;
-  if (typeof dietaryOptionId2 === 'undefined') dietaryOptionId2 = null;
-  if (typeof dietaryOptionId3 === 'undefined') dietaryOptionId3 = null;
-  if (typeof dietaryOptionId4 === 'undefined') dietaryOptionId4 = null;
-  if (typeof dietaryOptionId5 === 'undefined') dietaryOptionId5 = null;
-
-  const sql = `SELECT DISTINCT r.id, r.name, r.capacity, r.location, r.description, r.phoneNumber, r.img 
-                FROM restaurants r 
-                INNER JOIN restaurantsDietaryOptions rdo 
-                ON r.id=rdo.restaunrant_id 
-                WHERE rdo.dietaryOption_id = ?
-                OR rdo.dietaryOption_id = ?
-                OR rdo.dietaryOption_id = ?
-                OR rdo.dietaryOption_id = ?
-                OR rdo.dietaryOption_id = ?`;
-
-  connection.query(sql, [dietaryOptionId1, dietaryOptionId2, dietaryOptionId3, dietaryOptionId4, dietaryOptionId5], (err, data) => {
-    if (err) {
-      console.log("Error fetching restaurants", err);
-      res.status(500).json({
-        error: err
-      });
-    } else {
-      res.json({
-        restaurants: data
-      });
-    }
-  });
-});
 
 //Return all bookings
 app.get("/bookings", function (req, res) {
@@ -120,7 +85,7 @@ app.get("/bookings/:restaurantId", function (req, res) {
 
   const restaurantId = req.params.restaurantId;
 
-  const sql = `SELECT * FROM bookings WHERE restaunrant_id= ?`;
+  const sql = `SELECT * FROM bookings WHERE restaurant_id= ?`;
 
   connection.query(sql, [restaurantId], (err, data) => {
     if (err) {
@@ -190,7 +155,7 @@ app.get("/bookingsRestaurantsDate/:restaurantId/:date", function (req, res) {
   const restaurantId = req.params.restaurantId;
   const date = req.params.date;
 
-  const sql = `SELECT * FROM bookings WHERE restaunrant_id = ? AND date = ?`;
+  const sql = `SELECT * FROM bookings WHERE restaurant_id = ? AND date = ?`;
 
   connection.query(sql, [restaurantId, date], (err, data) => {
     if (err) {
