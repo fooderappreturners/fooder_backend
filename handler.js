@@ -40,6 +40,7 @@ app.get("/restaurants/:dietaryOptionId", function (req, res) {
     placeholders.push('?');
   });
 
+  // returns restaurants with the selected dietary requirements 
   const sql = `SELECT r.id, r.name, r.capacity, r.location, r.description, r.phoneNumber, r.img FROM restaurants r 
                 INNER JOIN restaurantsDietaryOptions rdo 
                 ON r.id=rdo.restaurant_id 
@@ -59,45 +60,6 @@ app.get("/restaurants/:dietaryOptionId", function (req, res) {
   });
 });
 
-// //Return the restaurants whith a multiply selection dietaryOptions
-// app.get("/multipleRestaurant/:dietaryOptionId1/:dietaryOptionId2/:dietaryOptionId3/:dietaryOptionId4/:dietaryOptionId5", function (req, res) {
-
-//   /***In Postman not working if it missing a parameter, check how to work in the front ***/
-//   const dietaryOptionId1 = req.params.dietaryOptionId1;
-//   const dietaryOptionId2 = req.params.dietaryOptionId2;
-//   const dietaryOptionId3 = req.params.dietaryOptionId3;
-//   const dietaryOptionId4 = req.params.dietaryOptionId4;
-//   const dietaryOptionId5 = req.params.dietaryOptionId5;
-
-//   if (typeof dietaryOptionId1 === 'undefined') dietaryOptionId1 = null;
-//   if (typeof dietaryOptionId2 === 'undefined') dietaryOptionId2 = null;
-//   if (typeof dietaryOptionId3 === 'undefined') dietaryOptionId3 = null;
-//   if (typeof dietaryOptionId4 === 'undefined') dietaryOptionId4 = null;
-//   if (typeof dietaryOptionId5 === 'undefined') dietaryOptionId5 = null;
-
-//   const sql = `SELECT DISTINCT r.id, r.name, r.capacity, r.location, r.description, r.phoneNumber, r.img 
-//                 FROM restaurants r 
-//                 INNER JOIN restaurantsDietaryOptions rdo 
-//                 ON r.id=rdo.restaurant_id 
-//                 WHERE rdo.dietaryOption_id = ?
-//                 OR rdo.dietaryOption_id = ?
-//                 OR rdo.dietaryOption_id = ?
-//                 OR rdo.dietaryOption_id = ?
-//                 OR rdo.dietaryOption_id = ?`;
-
-//   connection.query(sql, [dietaryOptionId1, dietaryOptionId2, dietaryOptionId3, dietaryOptionId4, dietaryOptionId5], (err, data) => {
-//     if (err) {
-//       console.log("Error fetching restaurants", err);
-//       res.status(500).json({
-//         error: err
-//       });
-//     } else {
-//       res.json({
-//         restaurants: data
-//       });
-//     }
-//   });
-// });
 
 //Return all bookings
 app.get("/bookings", function (req, res) {
