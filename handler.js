@@ -80,6 +80,24 @@ app.get("/bookings", function (req, res) {
   });
 });
 
+app.get("/restaurants", function (req, res) {
+
+  const sql = `SELECT * FROM restaurants`;
+
+  connection.query(sql, (err, data) => {
+    if (err) {
+      console.log("Error fetching bookings", err);
+      res.status(500).json({
+        error: err
+      });
+    } else {
+      res.json({
+        restaurants: data
+      });
+    }
+  });
+});
+
 //Return the bookings filtered by restaurant id
 app.get("/bookings/:restaurantId", function (req, res) {
 
