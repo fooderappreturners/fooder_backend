@@ -37,6 +37,10 @@ functions:
           method: post
           cors: true
       - http:
+          path: amendBooking/{bookingId}
+          method: put
+          cors: true
+      - http:
           path: deleteBooking/{bookingId}
           method: delete
           cors: true

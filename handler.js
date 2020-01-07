@@ -13,6 +13,12 @@ const connection = mysql.createConnection({
 
 const app = express();
 app.use(cors());
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  next();
+});
 app.use(bodyParser.json());
 
 app.get("/dietaryOptions", function (req, res) {
@@ -150,14 +156,42 @@ app.post("/addBooking", function (req, res) {
   });
 });
 
+app.put("/amendBooking/:bookingId", function (request, response) {
+  const bookingId = request.params.bookingId;
+  const bookingDate = request.body.date;
+
+  const sql = "UPDATE bookings SET date = ? WHERE id = ?";
+
+  connection.query(sql, [bookingDate, bookingId], (err, results, fields) => {
+    if (err) {
+      console.log("Error amending booking", err);
+      response.status(500).json({
+        error: err
+      });
+    } else {
+      response.status(200).json('Amendment complete')
+    }
+  })
+});
+// app.put("/tasks/:taskId", function (request, response) {
+//   const taskId = request.params.taskId;
+//   const task = request.body;
+//   // complete tasks and update the status to complete
+//   const q = "UPDATE Task SET text = ?, completed = ?, dateCreated = ?, dateDue = ? WHERE taskId = ?";
+//   connection.query(q, [task.text, task.completed, task.dateCreated, task.dateDue, taskId], function (err) {
+//     if (err) {
+//       response.status(500).json({ error: err });
+//     } else {
+//       response.sendStatus(205)
+//     }
+//   });
+// });
+
 //Delete a booking
 app.delete("/deleteBooking/:bookingId", function (request, response) {
   const id = request.params.bookingId;
-
   const sql = 'DELETE FROM bookings WHERE id = ?';
-
   connection.query(sql, [id], (err, results, fields) => {
-
     if (err) {
       console.log("Error deleting a booking", err);
       response.status(500).json({
@@ -169,26 +203,5 @@ app.delete("/deleteBooking/:bookingId", function (request, response) {
   });
 });
 
-//Return the bookings filtered by restaurant id and date
-app.get("/bookingsRestaurantsDate/:restaurantId/:date", function (req, res) {
-
-  const restaurantId = req.params.restaurantId;
-  const date = req.params.date;
-
-  const sql = `SELECT * FROM bookings WHERE restaurant_id = ? AND date = ?`;
-
-  connection.query(sql, [restaurantId, date], (err, data) => {
-    if (err) {
-      console.log("Error fetching bookings", err);
-      res.status(500).json({
-        error: err
-      });
-    } else {
-      res.json({
-        bookings: data
-      });
-    }
-  });
-});
 
 module.exports.fooder = serverless(app);
