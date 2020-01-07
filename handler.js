@@ -61,11 +61,13 @@ app.get("/restaurants/:dietaryOptionId", function (req, res) {
 });
 
 
-//Return all bookings
+//Return all bookings for the chain owner on adminpage
 app.get("/bookings", function (req, res) {
 
-  const sql = `SELECT * FROM bookings`;
-
+  const sql = `SELECT bookings.name AS booking_name, bookings.id AS booking_id, restaurants.name AS r_name, restaurants.id AS r_id, location, date, number 
+  FROM bookings 
+  JOIN restaurants 
+  ON bookings.restaurant_Id=restaurants.id`;
   connection.query(sql, (err, data) => {
     if (err) {
       console.log("Error fetching bookings", err);
