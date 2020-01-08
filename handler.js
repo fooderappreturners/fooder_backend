@@ -37,16 +37,12 @@ app.get("/dietaryOptions", function (req, res) {
   });
 });
 
-//Return the restaurants with a specific dietaryOption
 app.get("/restaurants/:dietaryOptionId", function (req, res) {
-
   const dietaryOptionId = req.params.dietaryOptionId.split(',');
   let placeholders = [];
   dietaryOptionId.forEach(id => {
     placeholders.push('?');
   });
-
-  // returns restaurants with the selected dietary requirements 
   const sql = `SELECT r.id, r.name, r.capacity, r.location, r.description, r.phoneNumber, r.img FROM restaurants r 
                 INNER JOIN restaurantsDietaryOptions rdo 
                 ON r.id=rdo.restaurant_id 
@@ -66,10 +62,7 @@ app.get("/restaurants/:dietaryOptionId", function (req, res) {
   });
 });
 
-
-//Return all bookings for the chain owner on adminpage
 app.get("/bookings", function (req, res) {
-
   const sql = `SELECT bookings.name AS booking_name, bookings.id AS booking_id, restaurants.name AS r_name, restaurants.id AS r_id, location, date, number 
   FROM bookings 
   JOIN restaurants 
@@ -89,9 +82,7 @@ app.get("/bookings", function (req, res) {
 });
 
 app.get("/restaurants", function (req, res) {
-
   const sql = `SELECT * FROM restaurants`;
-
   connection.query(sql, (err, data) => {
     if (err) {
       console.log("Error fetching bookings", err);
@@ -106,13 +97,9 @@ app.get("/restaurants", function (req, res) {
   });
 });
 
-//Return the bookings filtered by restaurant id
 app.get("/bookings/:restaurantId", function (req, res) {
-
   const restaurantId = req.params.restaurantId;
-
   const sql = `SELECT * FROM bookings WHERE restaurant_id= ?`;
-
   connection.query(sql, [restaurantId], (err, data) => {
     if (err) {
       console.log("Error fetching restaurants", err);
@@ -127,17 +114,13 @@ app.get("/bookings/:restaurantId", function (req, res) {
   });
 });
 
-//Add a booking
 app.post("/addBooking", function (req, res) {
-
   const id = null;
   const date = req.body.date;
   const number = req.body.number;
   const name = req.body.name;
   const restaurantId = req.body.restaurantId;
-
   const sql = `INSERT INTO bookings VALUES (?, ?, ?, ?, ?)`;
-
   connection.query(sql, [id, date, number, name, restaurantId], (err) => {
     if (err) {
       console.log("Error adding a booking", err);
@@ -159,9 +142,7 @@ app.post("/addBooking", function (req, res) {
 app.put("/amendBooking/:bookingId", function (request, response) {
   const bookingId = request.params.bookingId;
   const bookingDate = request.body.date;
-
   const sql = "UPDATE bookings SET date = ? WHERE id = ?";
-
   connection.query(sql, [bookingDate, bookingId], (err, results, fields) => {
     if (err) {
       console.log("Error amending booking", err);
@@ -173,21 +154,7 @@ app.put("/amendBooking/:bookingId", function (request, response) {
     }
   })
 });
-// app.put("/tasks/:taskId", function (request, response) {
-//   const taskId = request.params.taskId;
-//   const task = request.body;
-//   // complete tasks and update the status to complete
-//   const q = "UPDATE Task SET text = ?, completed = ?, dateCreated = ?, dateDue = ? WHERE taskId = ?";
-//   connection.query(q, [task.text, task.completed, task.dateCreated, task.dateDue, taskId], function (err) {
-//     if (err) {
-//       response.status(500).json({ error: err });
-//     } else {
-//       response.sendStatus(205)
-//     }
-//   });
-// });
 
-//Delete a booking
 app.delete("/deleteBooking/:bookingId", function (request, response) {
   const id = request.params.bookingId;
   const sql = 'DELETE FROM bookings WHERE id = ?';
@@ -202,6 +169,5 @@ app.delete("/deleteBooking/:bookingId", function (request, response) {
     }
   });
 });
-
 
 module.exports.fooder = serverless(app);
